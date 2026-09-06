@@ -138,7 +138,7 @@ export default function Landing() {
             className="mb-8 text-lg leading-relaxed"
             style={{ color: GRAY }}
           >
-            Search {startupCount} startups organized into a living family tree of 230+ innovation
+            Search {startupCount} startups organized into a living family tree of 240+ innovation
             maps. Open a branch, follow it down, and land on the companies that solve your exact
             problem.
           </p>
@@ -244,7 +244,7 @@ export default function Landing() {
           >
             <div className="flex items-center justify-between pb-4 mb-5" style={{ borderBottom: `1px solid ${BORDER}` }}>
               <div className="text-lg font-bold" style={{ color: DARK }}>Innovation Maps</div>
-              <div className="text-sm" style={{ color: GRAY }}>230+ maps · 4 lenses · live counts</div>
+              <div className="text-sm" style={{ color: GRAY }}>240+ maps · 4 lenses · live counts</div>
             </div>
 
             {/* Financial Services branch — expanded */}
@@ -356,7 +356,7 @@ export default function Landing() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {[
             { value: startupCount, label: 'startups, embedded and searchable' },
-            { value: '230+', label: 'curated, hierarchical innovation maps' },
+            { value: '240+', label: 'curated, hierarchical innovation maps' },
             { value: '4', label: 'lenses: sector, technology, function, use case' },
             { value: 'Live', label: 'counts on every map — updated as the database grows' },
           ].map((s, i) => (
@@ -674,7 +674,7 @@ export default function Landing() {
             </div>
             <h3 className="text-base font-bold mb-2" style={{ color: DARK }}>{liveStartupsValue || '500K+'} Startup Database</h3>
             <p className="text-sm leading-relaxed" style={{ color: GRAY }}>
-              Bulk-imported and organized into 230+ curated, hierarchical innovation maps. Every profile has a 1536-dim embedding for cosine-similarity search across the full corpus.
+              Bulk-imported and organized into 240+ curated, hierarchical innovation maps. Every profile has a 1536-dim embedding for cosine-similarity search across the full corpus.
             </p>
           </div>
           {/* Phase 60.6 (s50) — multi-role feature card */}
@@ -783,7 +783,7 @@ export default function Landing() {
                 'Direct messaging with any active OpenI user',
                 '8-Vector self-assessment + share via PDF / link',
                 'Apply to 5 challenges + 3 deal requests / month',
-                'Innovation Map + Directory + Find Mentors',
+                'Art of the Possible — 240+ innovation maps + Directory + Find Mentors',
                 'Notifications bell + Watchlist (saved searches)',
                 '5 meetings, 3 file uploads / month',
               ]}
@@ -818,7 +818,7 @@ export default function Landing() {
               features={[
                 'Direct messaging with startups + any active OpenI user',
                 '8-Vector self-evaluation framework',
-                'Innovation Map + Directory + keyword search',
+                'Art of the Possible — 240+ innovation maps with drill-down + Directory + keyword search',
                 '1 active challenge / month + review queue',
                 'Watchlist + Notifications bell',
                 'Deal pipeline (3 deals max)',

@@ -55,15 +55,15 @@ const SUBGROUP_PILL_PITCH = 180;       // approx widest pill + label gap
 
 const HUB_W = 180;
 const HUB_H = 180;
-const SECTOR_W = 200;
+const SECTOR_W = 210;
 const SECTOR_H = 60;
-const SUBGROUP_W = 160;
-const SUBGROUP_H = 44;
+const SUBGROUP_W = 176;
+const SUBGROUP_H = 50;
 // Phase 68 — leaf is a circle + label-below pair. The bounding box is the
 // circle width × (circle + label) so react-flow centres correctly.
 const LEAF_DISC = 64;
-const LEAF_W = 130;
-const LEAF_H = 100;
+const LEAF_W = 148;
+const LEAF_H = 106;
 
 // Top-N caps
 const MAX_SECTORS = 6;
@@ -93,18 +93,18 @@ function HubNode({ data }) {
       }}
     >
       <Handle type="source" position={Position.Top} style={{ visibility: 'hidden' }} />
-      <div style={{ fontSize: 11, color: '#D4A843', fontFamily: 'monospace', marginBottom: 4 }}>
+      <div style={{ fontSize: 12, color: '#D4A843', fontFamily: 'monospace', marginBottom: 4 }}>
         {/* s106: term maps pass a kicker ("Sector map"); clusters keep #id */}
         {data.kicker || `Cluster #${data.cluster_id}`}
       </div>
-      <div style={{ fontSize: 14, fontWeight: 600, lineHeight: 1.2, marginBottom: 4 }}>
+      <div style={{ fontSize: 16, fontWeight: 600, lineHeight: 1.2, marginBottom: 4 }}>
         {data.label}
       </div>
       {/* #94A3B8 is deliberate here and must NOT be darkened with the rest of the
           grey ramp: this node sits on the #0D2137 navy fill set above, where the
           light slate reads at 6.6:1. The AA fix applied elsewhere (-> #6e6e6e)
           would drop it to 1.5:1. */}
-      <div style={{ fontSize: 11, color: '#94A3B8' }}>
+      <div style={{ fontSize: 12, color: '#94A3B8' }}>
         {data.member_count.toLocaleString()} startups
       </div>
     </div>
@@ -130,10 +130,10 @@ function SectorNode({ data }) {
     >
       <Handle type="target" position={Position.Top} style={{ visibility: 'hidden' }} />
       <Handle type="source" position={Position.Bottom} style={{ visibility: 'hidden' }} />
-      <div style={{ fontSize: 13, fontWeight: 600, color: '#0D2137', textAlign: 'center' }}>
+      <div style={{ fontSize: 14, fontWeight: 700, color: '#0D2137', textAlign: 'center' }}>
         {data.sector}
       </div>
-      <div style={{ fontSize: 10, color: '#64748B', marginTop: 2 }}>
+      <div style={{ fontSize: 11, color: '#475569', marginTop: 2 }}>
         {data.n.toLocaleString()} in theme
       </div>
     </div>
@@ -253,7 +253,7 @@ function LeafNode({ data }) {
           marginTop: 6,
           // s113 readability pass (Rajeev): 11px grey-adjacent labels were
           // illegible at map zoom — bigger, on a solider plate.
-          fontSize: 12.5,
+          fontSize: 14,
           fontWeight: 600,
           color: '#0D2137',
           textAlign: 'center',
@@ -296,10 +296,10 @@ function SubgroupNode({ data }) {
     >
       <Handle type="target" position={Position.Top} style={{ visibility: 'hidden' }} />
       <Handle type="source" position={Position.Bottom} style={{ visibility: 'hidden' }} />
-      <div style={{ fontSize: 13, fontWeight: 700, color: '#0D2137', textAlign: 'center', lineHeight: 1.15 }}>
+      <div style={{ fontSize: 14, fontWeight: 700, color: '#0D2137', textAlign: 'center', lineHeight: 1.15 }}>
         {data.label}
       </div>
-      <div style={{ fontSize: 10.5, color: '#475569' }}>
+      <div style={{ fontSize: 11.5, color: '#475569' }}>
         {data.member_count?.toLocaleString()} startups
       </div>
     </div>
