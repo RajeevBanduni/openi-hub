@@ -19,7 +19,7 @@
  *   - onLeafClick: (userId) => void (optional; defaults to in-app navigate)
  */
 
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   ReactFlow,
@@ -140,6 +140,60 @@ function SectorNode({ data }) {
   );
 }
 
+// s113 — most crawled startups carry no logo_url but DO carry a website,
+// and initials-only leaves read as a wireframe to corporate clients
+// (Rajeev, 6 Sep: "minimum every startup should have logo"). Fallback
+// chain per leaf: logo_url → website-derived logo (Clearbit's logo API
+// 404s cleanly when it has none, which onError turns into the next
+// step) → the initial. CSP already allows any https: image. If Clearbit
+// ever sunsets the endpoint, swap the host for
+// https://www.google.com/s2/favicons?domain=<h>&sz=64 (never 404s, so
+// the chain would need a default-globe check instead).
+const websiteLogoUrl = (website) => {
+  if (!website || typeof website !== 'string') return null;
+  try {
+    const host = new URL(/^https?:\/\//i.test(website) ? website : `https://${website}`).hostname;
+    return host ? `https://logo.clearbit.com/${host}` : null;
+  } catch {
+    return null;
+  }
+};
+
+// The initial is ALWAYS rendered underneath; candidate images stack on
+// top and remove themselves on error, so a dead logo_url now falls
+// through to the favicon and then the initial instead of leaving an
+// empty disc (latent bug: the old onError just hid the img).
+function LeafLogo({ data }) {
+  const candidates = [data.logo_url, websiteLogoUrl(data.website)].filter(Boolean);
+  const [idx, setIdx] = useState(0);
+  const src = candidates[idx];
+  return (
+    <>
+      <span style={{ fontSize: 22, fontWeight: 700, color: '#6e6e6e' }}>
+        {(data.company_name || '?').charAt(0).toUpperCase()}
+      </span>
+      {src && (
+        <img
+          src={src}
+          alt=""
+          loading="lazy"
+          referrerPolicy="no-referrer"
+          style={{
+            position: 'absolute',
+            inset: 0,
+            margin: 'auto',
+            width: '78%',
+            height: '78%',
+            objectFit: 'contain',
+            background: '#FFFFFF',
+          }}
+          onError={() => setIdx((i) => i + 1)}
+        />
+      )}
+    </>
+  );
+}
+
 function LeafNode({ data }) {
   // Org-chart style leaf: white circular logo well + 2-line name label below.
   // The circle echoes the hub and the inner logo plate inside the leaf,
@@ -189,27 +243,17 @@ function LeafNode({ data }) {
           overflow: 'hidden',
           transition: 'border-color 140ms, box-shadow 140ms, transform 140ms',
           flexShrink: 0,
+          position: 'relative',
         }}
       >
-        {data.logo_url ? (
-          <img
-            src={data.logo_url}
-            alt=""
-            style={{ width: '78%', height: '78%', objectFit: 'contain' }}
-            onError={(e) => {
-              e.currentTarget.style.display = 'none';
-            }}
-          />
-        ) : (
-          <span style={{ fontSize: 22, fontWeight: 700, color: '#6e6e6e' }}>
-            {(data.company_name || '?').charAt(0).toUpperCase()}
-          </span>
-        )}
+        <LeafLogo data={data} />
       </div>
       <div
         style={{
           marginTop: 6,
-          fontSize: 11,
+          // s113 readability pass (Rajeev): 11px grey-adjacent labels were
+          // illegible at map zoom — bigger, on a solider plate.
+          fontSize: 12.5,
           fontWeight: 600,
           color: '#0D2137',
           textAlign: 'center',
@@ -223,7 +267,7 @@ function LeafNode({ data }) {
           padding: '0 2px',
           // Soft white plate behind text so it stays readable when the
           // leaf overlaps the dotted background or an edge.
-          background: 'rgba(250, 251, 252, 0.85)',
+          background: 'rgba(250, 251, 252, 0.95)',
           borderRadius: 6,
         }}
       >
@@ -252,10 +296,10 @@ function SubgroupNode({ data }) {
     >
       <Handle type="target" position={Position.Top} style={{ visibility: 'hidden' }} />
       <Handle type="source" position={Position.Bottom} style={{ visibility: 'hidden' }} />
-      <div style={{ fontSize: 12, fontWeight: 600, color: '#0D2137', textAlign: 'center', lineHeight: 1.15 }}>
+      <div style={{ fontSize: 13, fontWeight: 700, color: '#0D2137', textAlign: 'center', lineHeight: 1.15 }}>
         {data.label}
       </div>
-      <div style={{ fontSize: 9, color: '#6e6e6e' }}>
+      <div style={{ fontSize: 10.5, color: '#475569' }}>
         {data.member_count?.toLocaleString()} startups
       </div>
     </div>
@@ -421,6 +465,7 @@ function buildGraph(cluster, startups, subgroups = []) {
               user_id: leaf.user_id || leaf.id,
               company_name: leaf.company_name,
               logo_url: leaf.logo_url,
+              website: leaf.website,
             },
             draggable: false,
           });
@@ -464,6 +509,7 @@ function buildGraph(cluster, startups, subgroups = []) {
           user_id: leaf.user_id || leaf.id,
           company_name: leaf.company_name,
           logo_url: leaf.logo_url,
+          website: leaf.website,
         },
         draggable: false,
       });
